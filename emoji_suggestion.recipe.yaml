@@ -1,0 +1,28 @@
+# encoding: utf-8
+---
+recipe:
+  Rx: emoji_suggestion
+  args:
+    - schema=luna_pinyin
+  description: >-
+    Customize input schema to show emoji suggestion with OpenCC
+
+install_files: >-
+  emoji_suggestion.recipe.yaml
+
+patch_files:
+  ${schema:-luna_pinyin}.custom.yaml:
+    - patch/+:
+      __include: emoji_suggestion.recipe:/patch
+
+patch:
+  switches/@next:
+    name: emoji_suggestion
+    reset: 1
+    states: [ "🈚️️\uFE0E", "🈶️️\uFE0F" ]
+  'engine/filters/@before 0':
+    simplifier@emoji_suggestion
+  emoji_suggestion:
+    opencc_config: emoji.json
+    option_name: emoji_suggestion
+    tips: all
